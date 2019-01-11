@@ -43,7 +43,7 @@ or
 ./start.sh
 ```
 
-To run only the backend data services (Redis), please, use the data only compose file.
+To run only the backend data services (Redis, Mysql), please, use the data only compose file.
 
 ```bash
 docker-compose -f docker-compose.data-only.yml up -d
