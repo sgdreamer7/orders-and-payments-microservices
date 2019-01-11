@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  redis:
+    image: "bitnami/redis:latest"
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_data:/bitnami/redis"
+
+  mysql:
+    container_name: mysql_db
+    hostname: mysql_db
+    image: "mysql:5.7"
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - "mysql_data:/var/lib/mysql"
+  
+volumes:
+  redis_data:
+    driver: local
+
+  mysql_data:
+    driver: local

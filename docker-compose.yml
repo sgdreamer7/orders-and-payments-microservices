@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  orders:
+    image: orders-and-payments/orders:${TAG:-latest}
+    build:
+      context: ./services/orders
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - '4200:4200'
+    depends_on:
+      - redis
+      - mysql
+
+  payments:
+    image: orders-and-payments/payments:${TAG:-latest}
+    build:
+      context: ./services/payments
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "4201:3000"
+    depends_on:
+      - redis
+
+  redis:
+    image: "bitnami/redis:latest"
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    labels:
+      kompose.service.type: nodeport
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redis_data:/bitnami/redis"
+
+  mysql:
+    container_name: mysql_db
+    hostname: mysql_db
+    image: "mysql:5.7"
+    environment: 
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - "mysql_data:/var/lib/mysql"
+  
+volumes:
+  redis_data:
+    driver: local
+
+  mysql_data:
+    driver: local
