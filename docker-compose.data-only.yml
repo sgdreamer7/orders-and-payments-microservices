@@ -18,6 +18,7 @@ services:
     container_name: mysql_db
     hostname: mysql_db
     image: "mysql:5.7"
+    command: --init-file /config/init.sql
     environment: 
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mysql
@@ -27,6 +28,7 @@ services:
       - "3306:3306"
     volumes:
       - "mysql_data:/var/lib/mysql"
+      - ./init.sql:/config/init.sql
   
 volumes:
   redis_data:

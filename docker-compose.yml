@@ -8,6 +8,11 @@ services:
       dockerfile: Dockerfile
     environment:
       - REDIS_HOST=redis
+      - DB_HOST=localhost
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=orders_and_payments
     ports:
       - '4200:4200'
     depends_on:
@@ -43,6 +48,7 @@ services:
     container_name: mysql_db
     hostname: mysql_db
     image: "mysql:5.7"
+    command: --init-file /config/init.sql
     environment: 
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: mysql
@@ -52,6 +58,7 @@ services:
       - "3306:3306"
     volumes:
       - "mysql_data:/var/lib/mysql"
+      - ./init.sql:/config/init.sql
   
 volumes:
   redis_data:
