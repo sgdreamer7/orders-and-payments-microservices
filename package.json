@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "typeorm": "^0.2.11"
+  }
+}
