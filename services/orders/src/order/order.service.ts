@@ -2,13 +2,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { DeleteResult, Repository } from 'typeorm';
 
-import { BaseService } from 'common/interfaces/base-service.interface';
-import { Order } from 'order/order.entity';
+import { BaseService } from '../common/interfaces/base-service.interface';
+import { Order } from './order.entity';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { OrderState } from 'common/enums/order-state.enum';
-import { PaymentsService } from 'payments/payments.service';
-import { DELAY_FOR_DELIVERY } from 'config';
+import { OrderState } from '../common/enums/order-state.enum';
+import { PaymentsService } from '../payments/payments.service';
+import { DELAY_FOR_DELIVERY } from '../config';
 
 @Injectable()
 export class OrderService implements BaseService<Order, CreateOrderDto, UpdateOrderDto> {

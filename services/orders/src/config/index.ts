@@ -1,5 +1,3 @@
-import { join } from 'path';
-
 const {
   DB_HOST,
   DB_PORT,
