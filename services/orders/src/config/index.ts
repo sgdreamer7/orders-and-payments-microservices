@@ -17,3 +17,5 @@ export {
   DB_NAME,
   ORM_CONFIG,
 };
+
+export const DELAY_FOR_DELIVERY = 5000;

@@ -5,7 +5,7 @@ module.exports = {
    */
   apps: [
     {
-      name: 'Catalog',
+      name: 'Payments',
       script: 'main.js',
       watch: true,
       env: {

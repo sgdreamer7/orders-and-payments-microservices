@@ -31,7 +31,8 @@
     "mysql": "^2.16.0",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
-    "rxjs": "^6.2.2"
+    "rxjs": "^6.2.2",
+    "typeorm": "^0.2.11"
   },
   "devDependencies": {
     "@nestjs/testing": "^5.1.0",
