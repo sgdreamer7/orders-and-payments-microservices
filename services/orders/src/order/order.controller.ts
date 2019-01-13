@@ -1,11 +1,10 @@
 import { Controller, Get, Post, Delete, Body, Param } from '@nestjs/common';
 import { ApiUseTags, ApiOperation, ApiResponse, ApiImplicitParam } from '@nestjs/swagger';
-
-import { OrderService } from 'order/order.service';
+import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { Order } from 'order/order.entity';
+import { Order } from './order.entity';
 import { ResponseOrderDto } from './dto/response-order.dto';
-import { OrderState } from 'common/enums/order-state.enum';
+import { OrderState } from '../common/enums/order-state.enum';
 
 @Controller('orders')
 @ApiUseTags('orders')
