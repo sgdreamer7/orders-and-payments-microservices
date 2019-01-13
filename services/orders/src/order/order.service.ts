@@ -7,11 +7,15 @@ import { Order } from 'order/order.entity';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderState } from 'common/enums/order-state.enum';
+import { PaymentsService } from 'payments/payments.service';
+import { DELAY_FOR_DELIVERY } from 'config';
 
 @Injectable()
 export class OrderService implements BaseService<Order, CreateOrderDto, UpdateOrderDto> {
-  constructor(@InjectRepository(Order) private readonly OrderRepository: Repository<Order>) {
-  }
+  constructor(
+    private readonly paymentsService: PaymentsService,
+    @InjectRepository(Order) private readonly OrderRepository: Repository<Order>
+    ) {}
 
   async removeById(id: string | number): Promise<DeleteResult> {
     return this.OrderRepository.delete(id);
@@ -28,7 +32,12 @@ export class OrderService implements BaseService<Order, CreateOrderDto, UpdateOr
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
     const order = { ...new Order(), ...createOrderDto, state: OrderState.CREATED };
-    return this.OrderRepository.save(order);
+    const createdOrder = await this.OrderRepository.save(order);
+    setTimeout( () => {
+      this.processPayments(createdOrder)
+      .then( processedOrder => this.deliver(processedOrder));
+    }, 0);
+    return createdOrder;
   }
 
   async findById(id: number | string): Promise<Order> {
@@ -47,5 +56,28 @@ export class OrderService implements BaseService<Order, CreateOrderDto, UpdateOr
     const order = await this.OrderRepository.findOne(id);
     if (order && order.state !== OrderState.DELIVERED) await this.OrderRepository.update(id, {state: OrderState.CANCELLED});
     return this.OrderRepository.findOne(id);
+  }
+
+  async processPayments(order: Order): Promise<Order> {
+    if (order && order.state === OrderState.CREATED) {
+      const isConfirmed = await this.paymentsService.processPayments(order);
+      await this.OrderRepository.update(order.id, {state: isConfirmed ? OrderState.CONFIRMED : OrderState.CANCELLED});
+      return this.OrderRepository.findOne(order.id);
+    }
+    return order;
+  }
+
+  async deliver(order: Order): Promise<Order> {
+    return new Promise(async ( resolve ) => {
+      const orderRepository = this.OrderRepository;
+      if (order && order.state === OrderState.CONFIRMED) {
+        setTimeout(async () => {
+          await orderRepository.update(order.id, {state: OrderState.DELIVERED});
+          resolve(this.OrderRepository.findOne(order.id));
+        }, DELAY_FOR_DELIVERY);
+      } else {
+        resolve(order);
+      }
+    });
   }
 }

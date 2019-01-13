@@ -5,7 +5,7 @@ module.exports = {
    */
   apps: [
     {
-      name: 'GraphQL',
+      name: 'Orders',
       script: 'main.js',
       watch: true,
       env: {
