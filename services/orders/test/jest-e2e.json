@@ -1,6 +1,7 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
+  "setupTestFrameworkScriptFile": "<rootDir>/jest-e2e.setup.js",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
